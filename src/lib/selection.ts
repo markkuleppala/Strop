@@ -33,12 +33,12 @@ export function chooseNext(opts: {
     .sort((a, b) => (a.last_attempt_at ?? "").localeCompare(b.last_attempt_at ?? ""));
 
   if (rejected.length > 0 && opts.rand < RETRY_CHANCE) {
-    return { kind: "retry", concept: rejected[0] };
+    return { kind: "retry", concept: rejected[0]! };
   }
-  if (pending.length > 0) return { kind: "pending", concept: pending[0] };
+  if (pending.length > 0) return { kind: "pending", concept: pending[0]! };
   if (unseenStarters.length > 0) {
     const idx = Math.floor(opts.rand * unseenStarters.length) % unseenStarters.length;
-    return { kind: "starter", name: unseenStarters[idx] };
+    return { kind: "starter", name: unseenStarters[idx]! };
   }
   return { kind: "generate" };
 }
