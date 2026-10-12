@@ -14,7 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attempts: {
+        Row: {
+          concept_id: string
+          created_at: string
+          explanation: string
+          feedback: string
+          id: string
+          model_answer: string
+          passed: boolean
+          user_id: string
+        }
+        Insert: {
+          concept_id: string
+          created_at?: string
+          explanation: string
+          feedback: string
+          id?: string
+          model_answer: string
+          passed: boolean
+          user_id?: string
+        }
+        Update: {
+          concept_id?: string
+          created_at?: string
+          explanation?: string
+          feedback?: string
+          id?: string
+          model_answer?: string
+          passed?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attempts_concept_id_fkey"
+            columns: ["concept_id"]
+            isOneToOne: false
+            referencedRelation: "concepts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      concepts: {
+        Row: {
+          attempts: number
+          created_at: string
+          id: string
+          last_attempt_at: string | null
+          name: string
+          source: string
+          status: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          name: string
+          source?: string
+          status?: string
+          topic: string
+          user_id?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          name?: string
+          source?: string
+          status?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      topics: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
