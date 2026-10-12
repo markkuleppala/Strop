@@ -1,0 +1,172 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useCallback, useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { ArrowLeft, Check, RotateCcw, X } from "lucide-react";
+import { gradeExplanation, nextConcept, topicHistory } from "@/lib/learn.functions";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+
+export const Route = createFileRoute("/_authenticated/learn/$topic")({
+  head: ({ params }) => ({
+    meta: [
+      { title: `${params.topic} — Explain.` },
+      { name: "description", content: `Explain ${params.topic} concepts and get graded.` },
+      { property: "og:title", content: `${params.topic} — Explain.` },
+      { property: "og:description", content: `Explain ${params.topic} concepts and get graded.` },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: LearnPage,
+});
+
+type Concept = { id: string; name: string; retry: boolean };
+type Grade = { passed: boolean; feedback: string; model_answer: string };
+
+function LearnPage() {
+  const { topic } = Route.useParams();
+  const getNext = useServerFn(nextConcept);
+  const grade = useServerFn(gradeExplanation);
+  const history = useServerFn(topicHistory);
+  const qc = useQueryClient();
+
+  const [concept, setConcept] = useState<Concept | null>(null);
+  const [text, setText] = useState("");
+  const [result, setResult] = useState<Grade | null>(null);
+  const [loading, setLoading] = useState<"next" | "grade" | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const hist = useQuery({ queryKey: ["history", topic], queryFn: () => history({ data: { topic } }) });
+
+  const loadNext = useCallback(async () => {
+    setLoading("next");
+    setErr(null);
+    setResult(null);
+    setText("");
+    try {
+      setConcept(await getNext({ data: { topic } }));
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setLoading(null);
+    }
+  }, [getNext, topic]);
+
+  useEffect(() => {
+    loadNext();
+  }, [loadNext]);
+
+  const submit = async () => {
+    if (!concept) return;
+    setLoading("grade");
+    setErr(null);
+    try {
+      setResult(await grade({ data: { conceptId: concept.id, explanation: text } }));
+      qc.invalidateQueries({ queryKey: ["history", topic] });
+      qc.invalidateQueries({ queryKey: ["topics"] });
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const passed = hist.data?.filter((h) => h.status === "passed").length ?? 0;
+  const rejected = hist.data?.filter((h) => h.status === "rejected").length ?? 0;
+
+  return (
+    <main className="mx-auto max-w-4xl px-6 py-10">
+      <Link to="/topics" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <ArrowLeft className="h-4 w-4" /> All topics
+      </Link>
+      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-4">
+        <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">{topic}</p>
+        <p className="text-sm text-muted-foreground">
+          <span className="text-success">{passed} passed</span> · {rejected} to retry
+        </p>
+      </div>
+
+      <section className="mt-6 rounded-md border border-border bg-card p-8">
+        {loading === "next" ? (
+          <p className="text-muted-foreground">Finding your next concept…</p>
+        ) : concept ? (
+          <>
+            <p className="text-sm text-muted-foreground">
+              {concept.retry ? (
+                <span className="inline-flex items-center gap-1"><RotateCcw className="h-3 w-3" /> Second chance — explain:</span>
+              ) : (
+                "Explain in your own words:"
+              )}
+            </p>
+            <h1 className="mt-2 text-4xl font-semibold tracking-tight">{concept.name}</h1>
+
+            {!result ? (
+              <>
+                <Textarea
+                  autoFocus
+                  className="mt-6 min-h-48 bg-background text-base"
+                  placeholder="What is it, why does it matter, and how does it work?"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  disabled={loading === "grade"}
+                />
+                <div className="mt-4 flex justify-between gap-2">
+                  <Button variant="ghost" onClick={loadNext} disabled={!!loading}>Skip</Button>
+                  <Button onClick={submit} disabled={!!loading || text.trim().length < 10}>
+                    {loading === "grade" ? "Grading…" : "Submit explanation"}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="mt-6 space-y-6">
+                <div
+                  className={`flex items-center gap-2 rounded-md px-4 py-3 font-display text-xl ${
+                    result.passed ? "bg-success text-success-foreground" : "bg-destructive text-destructive-foreground"
+                  }`}
+                >
+                  {result.passed ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
+                  {result.passed ? "Passed" : "Rejected — it'll come back later"}
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">Feedback</h2>
+                  <p className="mt-1 text-muted-foreground">{result.feedback}</p>
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">A good explanation</h2>
+                  <div className="prose prose-sm mt-1 max-w-none text-foreground [&_p]:my-2 [&_ul]:list-disc [&_ul]:pl-5">
+                    <ReactMarkdown>{result.model_answer}</ReactMarkdown>
+                  </div>
+                </div>
+                <Button onClick={loadNext}>Next concept</Button>
+              </div>
+            )}
+          </>
+        ) : null}
+        {err && (
+          <div className="mt-4 text-sm text-destructive">
+            {err}{" "}
+            {!concept && <button className="underline" onClick={loadNext}>Try again</button>}
+          </div>
+        )}
+      </section>
+
+      {hist.data && hist.data.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-xl font-semibold">Your record</h2>
+          <ul className="mt-4 divide-y divide-border rounded-md border border-border bg-card">
+            {hist.data.map((h) => (
+              <li key={h.id} className="flex items-center justify-between px-4 py-3 text-sm">
+                <span>{h.name}</span>
+                <span className={h.status === "passed" ? "text-success" : "text-destructive"}>
+                  {h.status === "passed" ? "Passed" : "Rejected"} · {h.attempts} {h.attempts === 1 ? "try" : "tries"}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </main>
+  );
+}
