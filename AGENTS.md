@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Concept selection lives in the pure function `src/lib/selection.ts` (unit-tested); server functions in `src/lib/learn.functions.ts` only fetch rows and persist. Why: keeps the no-repeat/retry rules testable.
+- AI calls go through `src/lib/ai.server.ts` (streamed Responses, JSON parsed from text) and are imported dynamically inside handlers. Why: keeps the key and prompts server-only.
