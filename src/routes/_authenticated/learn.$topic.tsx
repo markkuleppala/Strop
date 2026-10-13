@@ -63,14 +63,21 @@ function LearnPage() {
     setLoading("grade");
     setErr(null);
     try {
-      setResult(await grade({ data: { conceptId: concept.id, explanation: text } }));
-      qc.invalidateQueries({ queryKey: ["history", topic] });
-      qc.invalidateQueries({ queryKey: ["topics"] });
+      const r = await grade({ data: { conceptId: concept.id, explanation: text } });
+      setResult(r);
+      if (r.passed) {
+        qc.invalidateQueries({ queryKey: ["history", topic] });
+        qc.invalidateQueries({ queryKey: ["topics"] });
+      }
     } catch (e) {
       setErr((e as Error).message);
     } finally {
       setLoading(null);
     }
+  };
+
+  const revise = () => {
+    setResult(null);
   };
 
   const passed = hist.data?.filter((h) => h.status === "passed").length ?? 0;
