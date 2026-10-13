@@ -11,9 +11,9 @@ import { Logo } from "@/components/AppHeader";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Explain." },
+      { title: "Sign in — Strop" },
       { name: "description", content: "Sign in to track which concepts you've mastered." },
-      { property: "og:title", content: "Sign in — Explain." },
+      { property: "og:title", content: "Sign in — Strop" },
       { property: "og:description", content: "Sign in to track which concepts you've mastered." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

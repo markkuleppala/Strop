@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export function Logo() {
   return (
     <Link to="/" className="flex items-baseline gap-1 font-display text-2xl font-semibold tracking-tight">
-      Explain<span className="text-primary">.</span>
+      Strop<span className="text-primary">.</span>
     </Link>
   );
 }
