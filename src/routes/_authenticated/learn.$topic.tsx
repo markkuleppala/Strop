@@ -63,14 +63,21 @@ function LearnPage() {
     setLoading("grade");
     setErr(null);
     try {
-      setResult(await grade({ data: { conceptId: concept.id, explanation: text } }));
-      qc.invalidateQueries({ queryKey: ["history", topic] });
-      qc.invalidateQueries({ queryKey: ["topics"] });
+      const r = await grade({ data: { conceptId: concept.id, explanation: text } });
+      setResult(r);
+      if (r.passed) {
+        qc.invalidateQueries({ queryKey: ["history", topic] });
+        qc.invalidateQueries({ queryKey: ["topics"] });
+      }
     } catch (e) {
       setErr((e as Error).message);
     } finally {
       setLoading(null);
     }
+  };
+
+  const revise = () => {
+    setResult(null);
   };
 
   const passed = hist.data?.filter((h) => h.status === "passed").length ?? 0;
@@ -127,19 +134,30 @@ function LearnPage() {
                   }`}
                 >
                   {result.passed ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
-                  {result.passed ? "Passed" : "Rejected — it'll come back later"}
+                  {result.passed ? "Passed" : "Not yet — revise your answer"}
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold">Feedback</h2>
+                  <h2 className="text-lg font-semibold">
+                    {result.passed ? "Feedback" : "What's wrong or missing"}
+                  </h2>
                   <p className="mt-1 text-muted-foreground">{result.feedback}</p>
                 </div>
-                <div>
-                  <h2 className="text-lg font-semibold">A good explanation</h2>
-                  <div className="prose prose-sm mt-1 max-w-none text-foreground [&_p]:my-2 [&_ul]:list-disc [&_ul]:pl-5">
-                    <ReactMarkdown>{result.model_answer}</ReactMarkdown>
+                {result.passed ? (
+                  <>
+                    <div>
+                      <h2 className="text-lg font-semibold">A good explanation</h2>
+                      <div className="prose prose-sm mt-1 max-w-none text-foreground [&_p]:my-2 [&_ul]:list-disc [&_ul]:pl-5">
+                        <ReactMarkdown>{result.model_answer}</ReactMarkdown>
+                      </div>
+                    </div>
+                    <Button onClick={loadNext}>Next concept</Button>
+                  </>
+                ) : (
+                  <div className="flex justify-between gap-2">
+                    <Button variant="ghost" onClick={loadNext} disabled={!!loading}>Give up — next concept</Button>
+                    <Button onClick={revise}>Revise my answer</Button>
                   </div>
-                </div>
-                <Button onClick={loadNext}>Next concept</Button>
+                )}
               </div>
             )}
           </>
