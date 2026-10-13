@@ -153,7 +153,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
     const { error: uErr } = await supabase
       .from("concepts")
       .update({
-        status: passed ? "passed" : "rejected",
+        status: passed ? "passed" : "new",
         attempts: concept.attempts + 1,
         last_attempt_at: new Date().toISOString(),
       })
