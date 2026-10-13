@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/AppHeader";
+import { STARTER_TOPIC_NAMES } from "@/lib/concepts-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -8,7 +9,8 @@ export const Route = createFileRoute("/")({
       { title: "Strop — Learn tech concepts by explaining them" },
       {
         name: "description",
-        content: "Pick a topic like ML, databases, AWS or algorithms, explain a concept in your own words, and get graded pass or reject by an AI tutor.",
+        content:
+          "Pick a topic like ML, databases, AWS, system design or data engineering, explain a concept in your own words, and get graded pass or reject by an AI tutor.",
       },
       { property: "og:title", content: "Strop — Learn tech concepts by explaining them" },
       { property: "og:description", content: "Explain concepts in your own words and get graded by an AI tutor." },
@@ -20,6 +22,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const nextNumber = String(STARTER_TOPIC_NAMES.length + 1).padStart(2, "0");
+
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
@@ -41,14 +45,26 @@ function Index() {
           <Link to="/topics">Start learning</Link>
         </Button>
         <div className="mt-24 grid gap-px overflow-hidden rounded-md border border-border bg-border md:grid-cols-4">
-          {["Machine Learning", "Databases", "AWS Services", "Algorithms"].map((t, i) => (
-            <div key={t} className="bg-card p-6">
+          {STARTER_TOPIC_NAMES.map((t, i) => (
+            <div key={t} className="flex flex-col bg-card p-6">
               <span className="font-display text-sm text-muted-foreground">0{i + 1}</span>
               <p className="mt-2 font-display text-xl">{t}</p>
             </div>
           ))}
+          <Link
+            to="/topics"
+            className="group flex flex-col bg-card p-6 transition-colors hover:bg-accent"
+          >
+            <span className="font-display text-sm text-muted-foreground">{nextNumber}</span>
+            <p className="mt-2 font-display text-xl text-primary">
+              Bring your own topic
+              <span aria-hidden className="ml-1 inline-block transition-transform group-hover:translate-x-1">
+                →
+              </span>
+            </p>
+            <p className="mt-auto pt-2 text-sm text-muted-foreground">Name any subject and the tutor builds the deck.</p>
+          </Link>
         </div>
-        <p className="mt-4 text-sm text-muted-foreground">…or add any topic you like.</p>
       </main>
     </div>
   );
