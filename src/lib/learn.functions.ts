@@ -110,18 +110,36 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
+    const { data: prior } = await supabase
+      .from("attempts")
+      .select("explanation,feedback")
+      .eq("concept_id", concept.id)
+      .order("created_at", { ascending: true })
+      .limit(10);
+
     const { askJson } = await import("./ai.server");
+    const historyBlock =
+      prior && prior.length > 0
+        ? "\n\nEarlier attempts in this session (oldest first), each followed by your feedback:\n" +
+          prior
+            .map((a, i) => `Attempt ${i + 1}:\n${a.explanation}\nYour feedback:\n${a.feedback}`)
+            .join("\n---\n")
+        : "";
     const out = await askJson<{ passed: boolean; feedback: string; model_answer: string }>(
-      "You are a fair but rigorous tutor grading a learner's explanation of a technical concept. " +
-        "Pass it if the explanation shows correct core understanding (what it is, why/when it matters, key mechanics), " +
-        "even if informal or brief. Reject it if it is wrong, vague, or misses the essential idea. " +
-        'Reply with only JSON: {"passed": boolean, "feedback": "2-4 sentences on what was good and what was missing or wrong", ' +
+      "You are a demanding tutor grading a learner's explanation of a technical concept. " +
+        "Do NOT pass partial answers. Pass only when the explanation is sufficient: factually correct AND covering the essential points " +
+        "(what it is, why/when it matters, key mechanics). " +
+        "If anything is incorrect, vague, or missing, set passed to false and give feedback that explicitly lists " +
+        "the incorrect parts and the missing parts, so the learner can revise and resubmit. " +
+        "Do not reveal the full answer in the feedback — point at the gaps, do not fill them. " +
+        "Be strict: when in doubt, do not pass. " +
+        'Reply with only JSON: {"passed": boolean, "feedback": "2-5 sentences naming exactly what was wrong and what is missing", ' +
         '"model_answer": "a clear, concise explanation of the concept in 4-8 sentences, markdown allowed"}.',
-      `Topic: ${concept.topic}\nConcept: ${concept.name}\n\nLearner's explanation:\n${data.explanation}`,
+      `Topic: ${concept.topic}\nConcept: ${concept.name}${historyBlock}\n\nLearner's latest explanation:\n${data.explanation}`,
     );
     const passed = out.passed === true;
     const feedback = String(out.feedback ?? "");
-    const model_answer = String(out.model_answer ?? "");
+    const model_answer = passed ? String(out.model_answer ?? "") : "";
 
     const { error: aErr } = await supabase.from("attempts").insert({
       user_id: userId,
