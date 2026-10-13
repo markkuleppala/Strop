@@ -11,9 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/_authenticated/learn/$topic")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.topic} — Explain.` },
+      { title: `${params.topic} — Strop` },
       { name: "description", content: `Explain ${params.topic} concepts and get graded.` },
-      { property: "og:title", content: `${params.topic} — Explain.` },
+      { property: "og:title", content: `${params.topic} — Strop` },
       { property: "og:description", content: `Explain ${params.topic} concepts and get graded.` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

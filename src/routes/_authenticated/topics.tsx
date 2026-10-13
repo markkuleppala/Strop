@@ -11,9 +11,9 @@ import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/_authenticated/topics")({
   head: () => ({
     meta: [
-      { title: "Topics — Explain." },
+      { title: "Topics — Strop" },
       { name: "description", content: "Choose a topic to practise explaining concepts." },
-      { property: "og:title", content: "Topics — Explain." },
+      { property: "og:title", content: "Topics — Strop" },
       { property: "og:description", content: "Choose a topic to practise explaining concepts." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

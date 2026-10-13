@@ -5,12 +5,12 @@ import { Logo } from "@/components/AppHeader";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Explain. — Learn tech concepts by explaining them" },
+      { title: "Strop — Learn tech concepts by explaining them" },
       {
         name: "description",
         content: "Pick a topic like ML, databases, AWS or algorithms, explain a concept in your own words, and get graded pass or reject by an AI tutor.",
       },
-      { property: "og:title", content: "Explain. — Learn tech concepts by explaining them" },
+      { property: "og:title", content: "Strop — Learn tech concepts by explaining them" },
       { property: "og:description", content: "Explain concepts in your own words and get graded by an AI tutor." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
