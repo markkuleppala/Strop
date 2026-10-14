@@ -107,7 +107,7 @@ function Index() {
                     key={`${c.name}-${i}`}
                     aria-hidden={i >= cards.length}
                     tabIndex={i >= cards.length ? -1 : 0}
-                    className="group flex w-72 shrink-0 flex-col rounded-md border border-border bg-background p-6 transition-colors hover:bg-accent"
+                    className="group mr-6 flex w-72 shrink-0 flex-col rounded-md border border-border bg-background p-6 transition-colors hover:bg-accent"
                   >
                     <span className="font-display text-sm text-muted-foreground">08</span>
                     <p className="mt-2 font-display text-2xl text-primary">
@@ -126,7 +126,7 @@ function Index() {
                     key={`${c.name}-${i}`}
                     aria-hidden={i >= cards.length}
                     tabIndex={i >= cards.length ? -1 : 0}
-                    className="flex w-72 shrink-0 flex-col rounded-md border border-border bg-background p-6 transition-colors hover:bg-accent"
+                    className="mr-6 flex w-72 shrink-0 flex-col rounded-md border border-border bg-background p-6 transition-colors hover:bg-accent"
                   >
                     <span className="font-display text-sm text-muted-foreground">
                       {String(cards.indexOf(c) + 1).padStart(2, "0")}
