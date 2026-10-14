@@ -28,14 +28,12 @@ function TopicsPage() {
   const del = useServerFn(deleteTopic);
   const qc = useQueryClient();
   const { data, isLoading, error } = useQuery({ queryKey: ["topics"], queryFn: () => list() });
-  const [name, setName] = useState("");
 
-  const onAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) return;
+  const onAdd = async (topicName: string) => {
+    const trimmed = topicName.trim();
+    if (!trimmed) return;
     try {
-      await add({ data: { name } });
-      setName("");
+      await add({ data: { name: trimmed } });
       qc.invalidateQueries({ queryKey: ["topics"] });
     } catch (err) {
       toast.error((err as Error).message);
@@ -52,7 +50,10 @@ function TopicsPage() {
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         {data?.map((t) => (
-          <div key={t.name} className="group relative rounded-md border border-border bg-card transition-colors hover:border-primary">
+          <div
+            key={t.name}
+            className="group relative rounded-md border border-border bg-card transition-colors hover:border-primary"
+          >
             <Link to="/learn/$topic" params={{ topic: t.name }} className="block p-6">
               <p className="font-display text-2xl">{t.name}</p>
               <p className="mt-3 text-sm text-muted-foreground">
@@ -77,12 +78,77 @@ function TopicsPage() {
             )}
           </div>
         ))}
-      </div>
 
-      <form onSubmit={onAdd} className="mt-10 flex max-w-md gap-2">
-        <Input placeholder="Add your own topic, e.g. Kubernetes" value={name} onChange={(e) => setName(e.target.value)} />
-        <Button type="submit" variant="secondary">Add</Button>
-      </form>
+        <AddTopicCard onAdd={onAdd} />
+      </div>
     </main>
+  );
+}
+
+function AddTopicCard({ onAdd }: { onAdd: (name: string) => Promise<void> }) {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const close = () => {
+    setName("");
+    setOpen(false);
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || busy) return;
+    setBusy(true);
+    try {
+      await onAdd(name);
+      close();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (open) {
+    return (
+      <form
+        onSubmit={submit}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") close();
+        }}
+        className="rounded-md border border-primary bg-card p-6"
+      >
+        <label htmlFor="new-topic" className="font-display text-2xl">
+          Your own topic
+        </label>
+        <p className="mt-3 text-sm text-muted-foreground">Name any subject and the tutor builds the deck.</p>
+        <div className="mt-4 flex gap-2">
+          <Input
+            id="new-topic"
+            autoFocus
+            placeholder="e.g. Kubernetes"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Button type="submit" disabled={busy || !name.trim()}>
+            {busy ? "Adding…" : "Add"}
+          </Button>
+        </div>
+      </form>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(true)}
+      className="group flex flex-col rounded-md border border-border bg-card p-6 text-left transition-colors hover:border-primary"
+    >
+      <p className="font-display text-2xl">
+        Bring your own topic
+        <span aria-hidden className="ml-1 inline-block transition-transform group-hover:translate-x-1">
+          →
+        </span>
+      </p>
+      <p className="mt-3 text-sm text-muted-foreground">Name any subject and the tutor builds the deck.</p>
+    </button>
   );
 }
