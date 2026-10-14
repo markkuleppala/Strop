@@ -6,3 +6,6 @@
 - [x] Front page: header shows account state (email, Continue learning, Sign out) when signed in, "Sign in" only when signed out
 - [x] Front page: tighten spacing throughout and drop the closing "Ready to find out what you actually know?" panel
 - [x] Verify signed-out and signed-in headers plus the shorter page in the preview
+- [x] /topics: "Bring your own topic" becomes a white topic card that opens into an inline add form
+- [x] Verify in the preview: card opens, adding a topic works, the new card appears
+- [ ] Header: hide the "Topics" button while on /topics
