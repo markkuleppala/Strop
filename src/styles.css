@@ -154,3 +154,36 @@
     font-family: var(--font-display);
   }
 }
+
+/* Landing page topic marquee */
+.strop-marquee-mask {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.strop-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: strop-marquee 45s linear infinite;
+  will-change: transform;
+}
+
+.strop-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes strop-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strop-marquee-track {
+    animation: none;
+  }
+}
