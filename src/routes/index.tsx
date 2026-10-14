@@ -46,7 +46,7 @@ function Index() {
   const cards = [
     ...STARTER_TOPIC_NAMES.map((t) => ({
       name: t,
-      count: STARTER_TOPICS[t].length,
+      count: STARTER_TOPICS[t]?.length ?? 0,
       own: false,
     })),
     { name: "Bring your own topic", count: 0, own: true },
