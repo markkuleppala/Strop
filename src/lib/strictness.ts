@@ -50,8 +50,14 @@ const FEEDBACK_RULE =
   "Do not reveal the full answer in the feedback — point at the gaps, do not fill them.";
 
 const ANSWER_FORMAT =
-  'Reply with only JSON: {"passed": boolean, "feedback": "2-5 sentences naming exactly what was wrong and what is missing", ' +
-  '"model_answer": "a clear, concise explanation of the concept in 4-8 sentences, markdown allowed"}.';
+  'Reply with only JSON: {"passed": boolean, ' +
+  '"issues": [{"line": "verbatim quote of the sentence in the learner\'s answer that is wrong or incomplete", ' +
+  '"problem": "what exactly is wrong with it, or what it fails to cover"}], ' +
+  '"feedback": "2-5 sentences naming exactly what was wrong and what is missing", ' +
+  '"model_answer": "a clear, concise explanation of the concept in 4-8 sentences, markdown allowed"}.\n' +
+  "In issues, copy the learner's own wording exactly so the sentence can be underlined, one entry per flawed sentence. " +
+  "For something the learner left out entirely, set line to an empty string and describe the gap in problem. " +
+  "A passing answer gets an empty issues array.";
 
 /** Grading rules for one strictness level. Pure: no secrets, safe to import from the client. */
 export function gradingInstructions(level: Strictness): string {

@@ -1,5 +1,6 @@
 export type AnswerIssue = { line: string; problem: string };
-export type AnswerLine = { text: string; problems: string[] };
+export type AnswerSegment = { text: string; problems: string[] };
+export type AnswerNote = { quote: string; problem: string };
 
 const norm = (s: string) =>
   s
@@ -11,22 +12,34 @@ const norm = (s: string) =>
 /** True when one quote sits inside the other (either direction), so a slightly trimmed quote still matches. */
 const overlaps = (a: string, b: string) => !!a && !!b && (a.includes(b) || b.includes(a));
 
+/** Breaks one line into sentence-sized pieces, keeping the original spacing so the answer still reads as written. */
+const SENTENCES = /[^.!?;:]+[.!?;:]*\s*/g;
+const sentences = (line: string): string[] => line.match(SENTENCES) ?? (line.length ? [line] : []);
+
 /**
- * Splits a submitted answer into lines and attaches the grader's issues to the line they quote.
- * Issues with no quote (something the learner left out entirely) come back as `unmissing` notes.
+ * Splits a submitted answer into sentence-sized segments and attaches the grader's issues to the segment
+ * they quote, so the wrong parts can be underlined and the rest left alone.
+ * Issues that quote nothing (a gap the learner never mentioned) still come back as notes, never dropped.
  */
-export function reviewAnswer(text: string, issues: AnswerIssue[]): { lines: AnswerLine[]; missing: AnswerIssue[] } {
-  const lines: AnswerLine[] = text.split("\n").map((t) => ({ text: t, problems: [] }));
-  const missing: AnswerIssue[] = [];
+export function reviewAnswer(
+  text: string,
+  issues: AnswerIssue[],
+): { segments: AnswerSegment[]; notes: AnswerNote[] } {
+  const segments: AnswerSegment[] = text
+    .split("\n")
+    .flatMap((line) => sentences(line).map((s) => ({ text: s, problems: [] as string[] })));
+
+  const notes: AnswerNote[] = [];
   for (const issue of issues) {
+    if (!issue.problem) continue;
     const quote = norm(issue.line);
-    if (!quote || !issue.problem) {
-      if (issue.problem) missing.push(issue);
-      continue;
+    const hit = quote ? segments.find((s) => overlaps(norm(s.text), quote)) : undefined;
+    if (hit) {
+      hit.problems.push(issue.problem);
+      notes.push({ quote: hit.text.trim(), problem: issue.problem });
+    } else {
+      notes.push({ quote: quote ? issue.line.trim() : "", problem: issue.problem });
     }
-    const hit = lines.find((l) => overlaps(norm(l.text), quote));
-    if (hit) hit.problems.push(issue.problem);
-    else missing.push(issue);
   }
-  return { lines, missing };
+  return { segments, notes };
 }

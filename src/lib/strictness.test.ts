@@ -30,6 +30,7 @@ describe("gradingInstructions", () => {
     for (const level of ["fair", "strict", "ruthless"] as const) {
       const instructions = gradingInstructions(level);
       expect(instructions).toContain('"passed": boolean');
+      expect(instructions).toContain('"issues"');
       expect(instructions).toContain('"model_answer"');
       expect(instructions).toContain("Do not reveal the full answer in the feedback");
     }
