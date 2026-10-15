@@ -25,3 +25,5 @@
 - [x] Header: show the account email untruncated on the front page and on /topics
 - [x] Progress: record which grader strictness each attempt used; show per topic which concepts you passed and at what grading, as 1-3 dots
 - [x] Lesson review: underline the incorrect lines of the submitted answer and show what is wrong with each
+- [x] Front page: stretch vertically to fill the screen and align the topic heading/paragraph with the hero block
+- [x] Front page: make "Sign in" a button and move it toward the right edge
