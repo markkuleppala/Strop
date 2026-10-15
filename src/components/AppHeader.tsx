@@ -32,6 +32,7 @@ export function AppHeader() {
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Logo />
         <nav className="flex items-center gap-2">
+          {email && <span className="text-sm text-muted-foreground">{email}</span>}
           {!onTopics && (
             <Button asChild variant="ghost" size="sm">
               <Link to="/topics">Topics</Link>
@@ -42,7 +43,6 @@ export function AppHeader() {
               <Link to="/progress">Progress</Link>
             </Button>
           )}
-          {email && <span className="text-sm text-muted-foreground">{email}</span>}
           <Button variant="outline" size="sm" onClick={signOut}>
             Sign out
           </Button>
