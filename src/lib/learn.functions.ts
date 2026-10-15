@@ -177,13 +177,25 @@ export const gradeExplanation = createServerFn({ method: "POST" })
             .map((a, i) => `Attempt ${i + 1}:\n${a.explanation}\nYour feedback:\n${a.feedback}`)
             .join("\n---\n")
         : "";
-    const out = await askJson<{ passed: boolean; feedback: string; model_answer: string }>(
+    const out = await askJson<{
+      passed: boolean;
+      feedback: string;
+      model_answer: string;
+      issues?: { line?: unknown; problem?: unknown }[];
+    }>(
       gradingInstructions(level),
       `Topic: ${concept.topic}\nConcept: ${concept.name}${historyBlock}\n\nLearner's latest explanation:\n${data.explanation}`,
     );
     const passed = out.passed === true;
     const feedback = String(out.feedback ?? "");
     const model_answer = passed ? String(out.model_answer ?? "") : "";
+    const issues = (Array.isArray(out.issues) ? out.issues : [])
+      .map((i) => ({
+        line: String(i?.line ?? "").slice(0, 400),
+        problem: String(i?.problem ?? "").slice(0, 600),
+      }))
+      .filter((i) => i.problem)
+      .slice(0, 12);
 
     const { error: aErr } = await supabase.from("attempts").insert({
       user_id: userId,
@@ -204,7 +216,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       })
       .eq("id", concept.id);
     if (uErr) throw new Error(uErr.message);
-    return { passed, feedback, model_answer, strictness: level };
+    return { passed, feedback, model_answer, strictness: level, issues };
   });
 
 export const topicHistory = createServerFn({ method: "POST" })

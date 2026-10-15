@@ -9,6 +9,7 @@ import { gradeExplanation, nextConcept, topicHistory } from "@/lib/learn.functio
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StrictnessPicker } from "@/components/StrictnessPicker";
+import { reviewAnswer, type AnswerIssue } from "@/lib/answer-review";
 
 
 export const Route = createFileRoute("/_authenticated/learn/$topic")({
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/learn/$topic")({
 
 type Previous = { explanation: string; feedback: string };
 type Concept = { id: string; name: string; retry: boolean; previous: Previous | null };
-type Grade = { passed: boolean; feedback: string; model_answer: string; strictness: string };
+type Grade = { passed: boolean; feedback: string; model_answer: string; strictness: string; issues: AnswerIssue[] };
 const levelLabel = (id: string) => STRICTNESS_LEVELS.find((l) => l.id === id)?.label ?? id;
 
 function LearnPage() {
