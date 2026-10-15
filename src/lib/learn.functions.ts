@@ -36,6 +36,27 @@ export const addTopic = createServerFn({ method: "POST" })
     if (STARTER_TOPICS[data.name]) return { ok: true };
     const { error } = await context.supabase.from("topics").insert({ name: data.name, user_id: context.userId });
     if (error && error.code !== "23505") throw new Error(error.message);
+
+    // Seed the new topic with 5 AI-generated concepts; more are generated on demand.
+    // Best-effort: topic creation must succeed even if generation fails.
+    try {
+      const { askJson } = await import("./ai.server");
+      const out = await askJson<{ concepts: string[] }>(
+        "You curate study concepts. Reply with only JSON: {\"concepts\": [\"<name>\", ...]}.",
+        `Topic: ${data.name}\nList 5 important, distinct concepts (2-6 words each) a learner should be able to explain, ordered from fundamental to advanced.`,
+      );
+      const names = [...new Set((out.concepts ?? []).map((c) => String(c).trim().slice(0, 120)).filter(Boolean))].slice(0, 5);
+      if (names.length) {
+        await context.supabase
+          .from("concepts")
+          .upsert(
+            names.map((name) => ({ user_id: context.userId, topic: data.name, name, source: "ai" })),
+            { onConflict: "user_id,topic,name" },
+          );
+      }
+    } catch {
+      // concept generation is best-effort; the learn page generates on demand
+    }
     return { ok: true };
   });
 
