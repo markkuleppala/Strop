@@ -1,6 +1,16 @@
 # Strop
 
-I want to create an app that teaches me for example database and machine learning concepts. The features should be sourcing these to concepts, asking for explanation of the topics from the user with grading (binary passed / rejected) and tracking the results so that concepts are not repeated. User should be able to select the topic/category from a list (for example ML, database topics, AWS services, algorithms).
+Built on the Feynman Technique, Strop replaces passive multiple-choice quizzes with active, first-principles recall. If you can’t explain a concept simply in your own words, you don’t truly understand it yet.
+
+How It Works
+
+- Explain from scratch: Prompted with a concept, write your own explanation without shortcuts.
+- Iterative, strict critique: An AI tutor reviews your answer sentence by sentence—highlighting errors, vague phrasing, and missing essentials without spoiling the solution.
+- Refine until sufficient: Revise your explanation until it satisfies the tutor. The model answer is unlocked only when you pass.
+- Adjustable strictness: Choose Fair, Strict, or Ruthless grading to test the depth of your understanding.
+- Smart retention: Passed concepts never repeat. Struggling or skipped topics return automatically until mastered.
+
+Pick from built-in engineering tracks (System Design, ML, Databases, DevOps, Data Engineering, AWS, Algorithms) or name any topic to generate a custom deck on the spot.
 
 This project was built with [Lovable](https://lovable.dev).
 
