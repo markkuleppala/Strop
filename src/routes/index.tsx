@@ -61,7 +61,7 @@ function AccountCluster() {
       <Button asChild size="sm" variant="outline">
         <Link to="/topics">Continue learning</Link>
       </Button>
-      <Button size="sm" variant="ghost" onClick={signOut}>
+      <Button size="sm" variant="outline" onClick={signOut}>
         Sign out
       </Button>
     </div>
@@ -81,7 +81,7 @@ function Index() {
 
   return (
     <div className="flex min-h-screen flex-col items-stretch overflow-x-hidden">
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4 xl:max-w-7xl xl:pl-[152px]">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
         <Logo />
         <AccountCluster />
       </header>
