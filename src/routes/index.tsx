@@ -27,23 +27,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const STEPS = [
-  {
-    n: "01",
-    title: "Pick a topic",
-    body: "Machine learning, databases, AWS, system design — or name your own and the tutor builds the deck.",
-  },
-  {
-    n: "02",
-    title: "Explain in your own words",
-    body: "One concept at a time. No multiple choice — you write it out, the way you would to a colleague.",
-  },
-  {
-    n: "03",
-    title: "Get graded, revise, pass",
-    body: "A strict AI tutor points out exactly what is wrong or missing. You revise until it's right. Then it never asks again.",
-  },
-];
 
 function AccountCluster() {
   const { session, ready } = useSession();
@@ -107,12 +90,11 @@ function Index() {
       <main>
         {/* Hero */}
         <section className="mx-auto max-w-5xl px-6 pb-12 pt-8 md:pt-12">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
-            The Feynman method, graded
-          </p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-            If you can explain it, <em className="text-primary">you know it.</em>
+          <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+            "If you can't explain it <em className="text-primary">simply</em>, you don't understand it well enough."
           </h1>
+          <p className="mt-4 font-display text-sm italic text-muted-foreground">— Albert Einstein</p>
+
           <p className="mt-5 max-w-xl text-base text-muted-foreground">
             Pick a topic. Get a concept. Explain it in your own words. An AI tutor marks it — pointing out exactly what
             you got wrong or missed — and doesn't let go until your explanation holds up.
@@ -121,10 +103,8 @@ function Index() {
             <Button asChild size="lg">
               <Link to="/topics">Start learning</Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <a href="#how-it-works">How it works</a>
-            </Button>
           </div>
+
           <p className="mt-5 text-xs text-muted-foreground">
             7 starter topics · Unlimited AI-generated concepts · Strict pass/reject grading
           </p>
@@ -181,23 +161,8 @@ function Index() {
             </div>
           </div>
         </section>
-
-        {/* How it works */}
-        <section id="how-it-works" className="mx-auto max-w-5xl scroll-mt-20 px-6 py-14">
-          <h2 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
-            Three steps<span className="text-primary">.</span> No shortcuts.
-          </h2>
-          <div className="mt-6 grid gap-px overflow-hidden rounded-md border border-border bg-border md:grid-cols-3">
-            {STEPS.map((s) => (
-              <div key={s.n} className="flex flex-col bg-card p-6">
-                <span className="font-display text-xs text-primary">{s.n}</span>
-                <h3 className="mt-2 font-display text-lg">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
-              </div>
-            ))}
-          </div>
-        </section>
       </main>
+
 
       <footer className="border-t border-border py-6">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 text-xs text-muted-foreground">
