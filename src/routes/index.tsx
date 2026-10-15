@@ -109,7 +109,10 @@ function Index() {
         </section>
 
         {/* Topic marquee */}
-        <section className="border-y border-border bg-card/50 py-14" aria-label="Topics">
+        <section
+          className="flex flex-1 flex-col justify-center border-y border-border bg-card/50 py-14"
+          aria-label="Topics"
+        >
           <div className="mx-auto mb-8 max-w-5xl px-6">
             <h2 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
               Start from a topic<span className="text-primary">.</span>
