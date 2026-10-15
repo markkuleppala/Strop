@@ -80,7 +80,7 @@ function Index() {
 
   return (
     <div className="flex min-h-screen flex-col items-stretch overflow-x-hidden">
-      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 xl:pl-[152px]">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4 xl:max-w-7xl xl:pl-[152px]">
         <Logo />
         <AccountCluster />
       </header>
