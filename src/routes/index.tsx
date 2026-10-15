@@ -13,12 +13,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Pick a topic like ML, databases, AWS, system design or data engineering, explain a concept in your own words, and get graded pass or reject by an AI tutor.",
+          "Pick one of seven starter topics — ML, databases, AWS, system design, DevOps, data engineering — or name any subject yourself, then explain a concept in your own words and get graded pass or reject by an AI tutor.",
       },
       { property: "og:title", content: "Strop — Learn tech concepts by explaining them" },
       {
         property: "og:description",
-        content: "Explain concepts in your own words and get graded by an AI tutor.",
+        content:
+          "Seven starter topics, or bring your own. Explain concepts in your own words and get graded by an AI tutor.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -94,8 +95,10 @@ function Index() {
           <p className="mt-4 font-display text-sm italic text-muted-foreground">— Albert Einstein</p>
 
           <p className="mt-8 max-w-2xl text-lg text-muted-foreground">
-            Pick a topic. Get a concept. Explain it in your own words. An AI tutor marks it — pointing out exactly what
-            you got wrong or missed — and doesn't let go until your explanation holds up.
+            Pick one of the seven starter topics — machine learning, databases, AWS, algorithms, system design, DevOps,
+            data engineering — or name any subject yourself and the tutor builds the deck. Then get a concept, explain
+            it in your own words, and an AI tutor marks it: pointing out exactly what you got wrong or missed, and not
+            letting go until your explanation holds up.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
@@ -104,7 +107,7 @@ function Index() {
           </div>
 
           <p className="mt-8 text-sm text-muted-foreground">
-            7 starter topics · Unlimited AI-generated concepts · Strict pass/reject grading
+            7 starter topics · Or name your own subject · Unlimited AI-generated concepts · Strict pass/reject grading
           </p>
         </section>
 
@@ -119,6 +122,8 @@ function Index() {
             </h2>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
               Every topic ships with a starter deck. Work through it, and the tutor keeps generating fresh concepts.
+              Don't see yours in the row? The last card lets you name any subject — a protocol, a framework, a
+              compiler design course from twenty years ago — and the tutor builds the deck around it.
             </p>
           </div>
           <div className="strop-marquee-mask">
