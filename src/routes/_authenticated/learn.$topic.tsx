@@ -179,7 +179,10 @@ function LearnPage() {
                 {!result.passed && (
                   <div>
                     <h2 className="text-lg font-semibold">Your answer</h2>
-                    <p className="mt-1 whitespace-pre-wrap rounded-md border border-border bg-background p-3 text-sm">{text}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Underlined sentences are the ones the tutor flagged — the rest read as correct.
+                    </p>
+                    <AnswerReview text={text} issues={result.issues ?? []} />
                   </div>
                 )}
                 <div>
@@ -232,5 +235,34 @@ function LearnPage() {
         </section>
       )}
     </main>
+  );
+}
+
+function AnswerReview({ text, issues }: { text: string; issues: AnswerIssue[] }) {
+  const { segments, notes } = reviewAnswer(text, issues);
+  return (
+    <div className="mt-2 rounded-md border border-border bg-background p-4">
+      <p className="whitespace-pre-wrap text-sm">
+        {segments.map((s, i) =>
+          s.problems.length ? (
+            <span key={i} className="underline decoration-destructive decoration-wavy decoration-2 underline-offset-4">
+              {s.text}
+            </span>
+          ) : (
+            <span key={i}>{s.text}</span>
+          ),
+        )}
+      </p>
+      {notes.length > 0 && (
+        <ul className="mt-4 space-y-2 border-t border-border pt-3 text-xs">
+          {notes.map((n, i) => (
+            <li key={i}>
+              {n.quote && <span className="block text-muted-foreground">"{n.quote}"</span>}
+              <span className="text-destructive">{n.problem}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
