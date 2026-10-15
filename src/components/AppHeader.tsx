@@ -2,6 +2,7 @@ import { Link, useNavigate, useRouter, useRouterState } from "@tanstack/react-ro
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/hooks/use-session";
 
 export function Logo() {
   return (
