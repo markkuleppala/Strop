@@ -18,6 +18,8 @@ export function AppHeader() {
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onTopics = pathname === "/topics" || pathname.startsWith("/topics/");
+  const { session } = useSession();
+  const email = session?.user.email;
   const signOut = async () => {
     await queryClient.cancelQueries();
     queryClient.clear();
