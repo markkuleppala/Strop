@@ -24,11 +24,14 @@ export function chooseNext(opts: {
   starterNames: string[];
   rows: ConceptRow[];
   rand: number;
+  /** Concept just skipped — never served again immediately. */
+  skipId?: string | null;
 }): NextChoice {
   const seen = new Set(opts.rows.map((r) => r.name.toLowerCase()));
-  const pending = opts.rows.filter((r) => r.status === "new");
+  const pool = opts.rows.filter((r) => r.id !== opts.skipId);
+  const pending = pool.filter((r) => r.status === "new");
   const unseenStarters = opts.starterNames.filter((n) => !seen.has(n.toLowerCase()));
-  const rejected = opts.rows
+  const rejected = pool
     .filter((r) => r.status === "rejected")
     .sort((a, b) => (a.last_attempt_at ?? "").localeCompare(b.last_attempt_at ?? ""));
 

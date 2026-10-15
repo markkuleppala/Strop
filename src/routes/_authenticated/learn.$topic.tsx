@@ -48,7 +48,7 @@ function LearnPage() {
 
   const hist = useQuery({ queryKey: ["history", topic], queryFn: () => history({ data: { topic } }) });
 
-  const loadNext = useCallback(async () => {
+  const loadNext = useCallback(async (skipId?: string) => {
     setLoading("next");
     setErr(null);
     setResult(null);
@@ -56,7 +56,7 @@ function LearnPage() {
     setLastFeedback(null);
     setShowFeedback(false);
     try {
-      const c = await getNext({ data: { topic } });
+      const c = await getNext({ data: { topic, skipId: skipId ?? null } });
       setConcept(c);
       if (c.previous) {
         setText(c.previous.explanation);
@@ -116,7 +116,7 @@ function LearnPage() {
 
       <section className="mt-6 rounded-md border border-border bg-card p-8">
         {loading === "next" ? (
-          <p className="text-muted-foreground">Finding your next concept…</p>
+          <p className="text-sm text-muted-foreground">Finding your next concept…</p>
         ) : concept ? (
           <>
             <p className="text-sm text-muted-foreground">
@@ -153,7 +153,7 @@ function LearnPage() {
                   disabled={loading === "grade"}
                 />
                 <div className="mt-4 flex justify-between gap-2">
-                  <Button variant="ghost" onClick={loadNext} disabled={!!loading}>Skip</Button>
+                  <Button variant="ghost" onClick={() => loadNext(concept?.id)} disabled={!!loading}>Skip</Button>
                   <Button onClick={submit} disabled={!!loading || text.trim().length < 10}>
                     {loading === "grade" ? (
                       <>
@@ -199,11 +199,11 @@ function LearnPage() {
                         <ReactMarkdown>{result.model_answer}</ReactMarkdown>
                       </div>
                     </div>
-                    <Button onClick={loadNext}>Next concept</Button>
+                    <Button onClick={() => loadNext()}>Next concept</Button>
                   </>
                 ) : (
                   <div className="flex justify-between gap-2">
-                    <Button variant="ghost" onClick={loadNext} disabled={!!loading}>Give up — next concept</Button>
+                    <Button variant="ghost" onClick={() => loadNext(concept?.id)} disabled={!!loading}>Give up — next concept</Button>
                     <Button onClick={revise}>Revise my answer</Button>
                   </div>
                 )}
@@ -214,7 +214,7 @@ function LearnPage() {
         {err && (
           <div className="mt-4 text-sm text-destructive">
             {err}{" "}
-            {!concept && <button className="underline" onClick={loadNext}>Try again</button>}
+            {!concept && <button className="underline" onClick={() => loadNext()}>Try again</button>}
           </div>
         )}
       </section>
