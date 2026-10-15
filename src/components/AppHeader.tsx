@@ -42,6 +42,7 @@ export function AppHeader() {
               <Link to="/progress">Progress</Link>
             </Button>
           )}
+          {email && <span className="text-sm text-muted-foreground">{email}</span>}
           <Button variant="outline" size="sm" onClick={signOut}>
             Sign out
           </Button>
