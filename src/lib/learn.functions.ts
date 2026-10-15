@@ -192,6 +192,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       passed,
       feedback,
       model_answer,
+      strictness: level,
     });
     if (aErr) throw new Error(aErr.message);
     const { error: uErr } = await supabase
@@ -226,7 +227,7 @@ export const getProgress = createServerFn({ method: "GET" })
     const { supabase } = context;
     const [c, a, t] = await Promise.all([
       supabase.from("concepts").select("id,topic,name,status,attempts"),
-      supabase.from("attempts").select("concept_id,passed,created_at").order("created_at", { ascending: false }).limit(2000),
+      supabase.from("attempts").select("concept_id,passed,created_at,strictness").order("created_at", { ascending: false }).limit(2000),
       supabase.from("topics").select("name").order("created_at"),
     ]);
     const err = c.error ?? a.error ?? t.error;
