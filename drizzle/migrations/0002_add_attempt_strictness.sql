@@ -1,0 +1,2 @@
+ALTER TABLE public.attempts ADD COLUMN IF NOT EXISTS strictness text;
+ALTER TABLE public.attempts ADD CONSTRAINT attempts_strictness_check CHECK (strictness IS NULL OR strictness IN ('fair','strict','ruthless'));
