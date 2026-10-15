@@ -10,7 +10,8 @@
 - [x] Verify in the preview: card opens, adding a topic works, the new card appears
 - [x] Header: hide the "Topics" button while on /topics
 - [x] Front page: lead with Einstein's "If you can't explain it simply…" quote; drop the "The Feynman method, graded" label and the "Three steps. No shortcuts." block
-- [ ] Grader strictness: learner picks fair / strict / ruthless, saved to their account and used when grading
-- [ ] Match margins between the front page and /topics: logo position and content width should line up across both
+- [x] Grader strictness: learner picks fair / strict / ruthless, saved to their account and used when grading
+- [x] Match margins between the front page and /topics: logo position and content width should line up across both
+
 
 
