@@ -16,3 +16,9 @@
 
 
 - [x] Progress dashboard at /progress with header link
+- [x] Forgot password flow (link on /auth + /reset-password page)
+- [x] Lesson: spinner while grading; show submitted answer with rejection feedback
+- [x] Lesson: show grading difficulty used with the result
+- [x] Lesson: 'Show feedback' button while revising
+- [x] Lesson: returning to a tried concept shows the latest rejected answer
+- [x] Strictness picker: Fair light, Strict medium, Ruthless dark salvia

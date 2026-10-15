@@ -54,7 +54,7 @@ export function StrictnessPicker({
               className={cn(
                 "rounded px-3 py-1 text-sm transition-colors",
                 active
-                  ? "bg-primary text-primary-foreground"
+                  ? LEVEL_CLASS[level.id]
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
@@ -66,3 +66,9 @@ export function StrictnessPicker({
     </div>
   );
 }
+
+const LEVEL_CLASS: Record<Strictness, string> = {
+  fair: "bg-strict-fair text-strict-fair-foreground",
+  strict: "bg-strict-strict text-strict-strict-foreground",
+  ruthless: "bg-strict-ruthless text-strict-ruthless-foreground",
+};

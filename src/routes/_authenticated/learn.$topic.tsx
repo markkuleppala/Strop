@@ -3,7 +3,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { ArrowLeft, Check, RotateCcw, X } from "lucide-react";
+import { ArrowLeft, Check, Loader2, RotateCcw, X } from "lucide-react";
+import { STRICTNESS_LEVELS } from "@/lib/strictness";
 import { gradeExplanation, nextConcept, topicHistory } from "@/lib/learn.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,8 +25,10 @@ export const Route = createFileRoute("/_authenticated/learn/$topic")({
   component: LearnPage,
 });
 
-type Concept = { id: string; name: string; retry: boolean };
-type Grade = { passed: boolean; feedback: string; model_answer: string };
+type Previous = { explanation: string; feedback: string };
+type Concept = { id: string; name: string; retry: boolean; previous: Previous | null };
+type Grade = { passed: boolean; feedback: string; model_answer: string; strictness: string };
+const levelLabel = (id: string) => STRICTNESS_LEVELS.find((l) => l.id === id)?.label ?? id;
 
 function LearnPage() {
   const { topic } = Route.useParams();
@@ -39,6 +42,8 @@ function LearnPage() {
   const [result, setResult] = useState<Grade | null>(null);
   const [loading, setLoading] = useState<"next" | "grade" | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [lastFeedback, setLastFeedback] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const hist = useQuery({ queryKey: ["history", topic], queryFn: () => history({ data: { topic } }) });
 
@@ -47,8 +52,15 @@ function LearnPage() {
     setErr(null);
     setResult(null);
     setText("");
+    setLastFeedback(null);
+    setShowFeedback(false);
     try {
-      setConcept(await getNext({ data: { topic } }));
+      const c = await getNext({ data: { topic } });
+      setConcept(c);
+      if (c.previous) {
+        setText(c.previous.explanation);
+        setLastFeedback(c.previous.feedback);
+      }
     } catch (e) {
       setErr((e as Error).message);
     } finally {
@@ -67,6 +79,7 @@ function LearnPage() {
     try {
       const r = await grade({ data: { conceptId: concept.id, explanation: text } });
       setResult(r);
+      if (!r.passed) setLastFeedback(r.feedback);
       if (r.passed) {
         qc.invalidateQueries({ queryKey: ["history", topic] });
         qc.invalidateQueries({ queryKey: ["topics"] });
@@ -80,6 +93,7 @@ function LearnPage() {
 
   const revise = () => {
     setResult(null);
+    setShowFeedback(false);
   };
 
   const passed = hist.data?.filter((h) => h.status === "passed").length ?? 0;
@@ -115,6 +129,20 @@ function LearnPage() {
 
             {!result ? (
               <>
+                {lastFeedback && (
+                  <div className="mt-6 text-sm">
+                    <button
+                      type="button"
+                      className="text-primary underline-offset-4 hover:underline"
+                      onClick={() => setShowFeedback((v) => !v)}
+                    >
+                      {showFeedback ? "Hide feedback" : "Show feedback on your last answer"}
+                    </button>
+                    {showFeedback && (
+                      <p className="mt-2 rounded-md border border-border bg-background p-3 text-muted-foreground">{lastFeedback}</p>
+                    )}
+                  </div>
+                )}
                 <Textarea
                   autoFocus
                   className="mt-6 min-h-48 bg-background text-base"
@@ -126,7 +154,13 @@ function LearnPage() {
                 <div className="mt-4 flex justify-between gap-2">
                   <Button variant="ghost" onClick={loadNext} disabled={!!loading}>Skip</Button>
                   <Button onClick={submit} disabled={!!loading || text.trim().length < 10}>
-                    {loading === "grade" ? "Grading…" : "Submit explanation"}
+                    {loading === "grade" ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" /> Grading…
+                      </>
+                    ) : (
+                      "Submit explanation"
+                    )}
                   </Button>
                 </div>
               </>
@@ -139,7 +173,14 @@ function LearnPage() {
                 >
                   {result.passed ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
                   {result.passed ? "Passed" : "Not yet — revise your answer"}
+                  <span className="ml-auto font-sans text-sm opacity-80">Graded {levelLabel(result.strictness)}</span>
                 </div>
+                {!result.passed && (
+                  <div>
+                    <h2 className="text-lg font-semibold">Your answer</h2>
+                    <p className="mt-1 whitespace-pre-wrap rounded-md border border-border bg-background p-3 text-sm">{text}</p>
+                  </div>
+                )}
                 <div>
                   <h2 className="text-lg font-semibold">
                     {result.passed ? "Feedback" : "What's wrong or missing"}
