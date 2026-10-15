@@ -7,6 +7,8 @@ import { ArrowLeft, Check, RotateCcw, X } from "lucide-react";
 import { gradeExplanation, nextConcept, topicHistory } from "@/lib/learn.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { StrictnessPicker } from "@/components/StrictnessPicker";
+
 
 export const Route = createFileRoute("/_authenticated/learn/$topic")({
   head: ({ params }) => ({
@@ -84,7 +86,7 @@ function LearnPage() {
   const rejected = hist.data?.filter((h) => h.status === "rejected").length ?? 0;
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-10">
+    <main className="mx-auto max-w-5xl px-6 py-10">
       <Link to="/topics" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> All topics
       </Link>
@@ -94,6 +96,8 @@ function LearnPage() {
           <span className="text-success">{passed} passed</span> · {rejected} to retry
         </p>
       </div>
+      <StrictnessPicker label="Grading by" className="mt-4" />
+
 
       <section className="mt-6 rounded-md border border-border bg-card p-8">
         {loading === "next" ? (

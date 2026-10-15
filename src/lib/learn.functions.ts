@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { STARTER_TOPICS, STARTER_TOPIC_NAMES } from "./concepts-data";
 import { chooseNext, type ConceptRow } from "./selection";
+import { DEFAULT_STRICTNESS, gradingInstructions, isStrictness, type Strictness } from "./strictness";
 
 export type TopicSummary = { name: string; custom: boolean; passed: number; rejected: number; total: number };
 
@@ -45,6 +46,37 @@ export const deleteTopic = createServerFn({ method: "POST" })
     const { error } = await context.supabase.from("topics").delete().eq("name", data.name);
     if (error) throw new Error(error.message);
     return { ok: true };
+  });
+
+export const getStrictness = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("user_settings")
+      .select("strictness")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    const stored = data?.strictness;
+    return { strictness: (isStrictness(stored) ? stored : DEFAULT_STRICTNESS) as Strictness };
+  });
+
+export const setStrictness = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { strictness: string }) => {
+    const level = String(d.strictness);
+    if (!isStrictness(level)) throw new Error("Unknown strictness level.");
+    return { strictness: level as Strictness };
+  })
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("user_settings")
+      .upsert(
+        { user_id: context.userId, strictness: data.strictness, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" },
+      );
+    if (error) throw new Error(error.message);
+    return { strictness: data.strictness };
   });
 
 export const nextConcept = createServerFn({ method: "POST" })
@@ -117,6 +149,13 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       .order("created_at", { ascending: true })
       .limit(10);
 
+    const { data: settings } = await supabase
+      .from("user_settings")
+      .select("strictness")
+      .eq("user_id", userId)
+      .maybeSingle();
+    const level: Strictness = isStrictness(settings?.strictness) ? settings.strictness : DEFAULT_STRICTNESS;
+
     const { askJson } = await import("./ai.server");
     const historyBlock =
       prior && prior.length > 0
@@ -126,15 +165,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
             .join("\n---\n")
         : "";
     const out = await askJson<{ passed: boolean; feedback: string; model_answer: string }>(
-      "You are a demanding tutor grading a learner's explanation of a technical concept. " +
-        "Do NOT pass partial answers. Pass only when the explanation is sufficient: factually correct AND covering the essential points " +
-        "(what it is, why/when it matters, key mechanics). " +
-        "If anything is incorrect, vague, or missing, set passed to false and give feedback that explicitly lists " +
-        "the incorrect parts and the missing parts, so the learner can revise and resubmit. " +
-        "Do not reveal the full answer in the feedback — point at the gaps, do not fill them. " +
-        "Be strict: when in doubt, do not pass. " +
-        'Reply with only JSON: {"passed": boolean, "feedback": "2-5 sentences naming exactly what was wrong and what is missing", ' +
-        '"model_answer": "a clear, concise explanation of the concept in 4-8 sentences, markdown allowed"}.',
+      gradingInstructions(level),
       `Topic: ${concept.topic}\nConcept: ${concept.name}${historyBlock}\n\nLearner's latest explanation:\n${data.explanation}`,
     );
     const passed = out.passed === true;
