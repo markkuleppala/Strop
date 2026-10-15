@@ -81,7 +81,10 @@ export const setStrictness = createServerFn({ method: "POST" })
 
 export const nextConcept = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { topic: string }) => ({ topic: String(d.topic) }))
+  .inputValidator((d: { topic: string; skipId?: string | null }) => ({
+    topic: String(d.topic),
+    skipId: d.skipId ? String(d.skipId) : null,
+  }))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { data: rows, error } = await supabase
@@ -94,6 +97,7 @@ export const nextConcept = createServerFn({ method: "POST" })
       starterNames: STARTER_TOPICS[data.topic] ?? [],
       rows: (rows ?? []) as ConceptRow[],
       rand: Math.random(),
+      skipId: data.skipId,
     });
 
     if (choice.kind === "retry" || choice.kind === "pending") {

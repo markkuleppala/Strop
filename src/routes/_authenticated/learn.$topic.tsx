@@ -48,7 +48,7 @@ function LearnPage() {
 
   const hist = useQuery({ queryKey: ["history", topic], queryFn: () => history({ data: { topic } }) });
 
-  const loadNext = useCallback(async () => {
+  const loadNext = useCallback(async (skipId?: string) => {
     setLoading("next");
     setErr(null);
     setResult(null);
@@ -56,7 +56,7 @@ function LearnPage() {
     setLastFeedback(null);
     setShowFeedback(false);
     try {
-      const c = await getNext({ data: { topic } });
+      const c = await getNext({ data: { topic, skipId: skipId ?? null } });
       setConcept(c);
       if (c.previous) {
         setText(c.previous.explanation);
@@ -116,7 +116,7 @@ function LearnPage() {
 
       <section className="mt-6 rounded-md border border-border bg-card p-8">
         {loading === "next" ? (
-          <p className="text-muted-foreground">Finding your next concept…</p>
+          <p className="text-sm text-muted-foreground">Finding your next concept…</p>
         ) : concept ? (
           <>
             <p className="text-sm text-muted-foreground">
@@ -203,7 +203,7 @@ function LearnPage() {
                   </>
                 ) : (
                   <div className="flex justify-between gap-2">
-                    <Button variant="ghost" onClick={loadNext} disabled={!!loading}>Give up — next concept</Button>
+                    <Button variant="ghost" onClick={() => loadNext(concept?.id)} disabled={!!loading}>Give up — next concept</Button>
                     <Button onClick={revise}>Revise my answer</Button>
                   </div>
                 )}

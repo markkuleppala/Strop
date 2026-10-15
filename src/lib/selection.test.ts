@@ -37,3 +37,11 @@ describe("chooseNext", () => {
     expect(r.kind).toBe("generate");
   });
 });
+
+describe("skipping", () => {
+  it("does not serve the just-skipped pending concept again", async () => {
+    const { chooseNext } = await import("./selection");
+    const rows = [{ id: "a", name: "A", status: "new", last_attempt_at: null }];
+    expect(chooseNext({ starterNames: [], rows, rand: 0.9, skipId: "a" })).toEqual({ kind: "generate" });
+  });
+});
