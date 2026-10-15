@@ -13,12 +13,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Pick a topic like ML, databases, AWS, system design or data engineering, explain a concept in your own words, and get graded pass or reject by an AI tutor.",
+          "Pick one of seven starter topics — ML, databases, AWS, system design, DevOps, data engineering — or name any subject yourself, then explain a concept in your own words and get graded pass or reject by an AI tutor.",
       },
       { property: "og:title", content: "Strop — Learn tech concepts by explaining them" },
       {
         property: "og:description",
-        content: "Explain concepts in your own words and get graded by an AI tutor.",
+        content:
+          "Seven starter topics, or bring your own. Explain concepts in your own words and get graded by an AI tutor.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -87,15 +88,17 @@ function Index() {
 
       <main className="flex flex-1 flex-col">
         {/* Hero */}
-        <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-14 md:py-16">
+        <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-12 md:py-14">
           <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
             "If you can't explain it <em className="text-primary">simply</em>, you don't understand it well enough."
           </h1>
           <p className="mt-4 font-display text-sm italic text-muted-foreground">— Albert Einstein</p>
 
-          <p className="mt-8 max-w-2xl text-lg text-muted-foreground">
-            Pick a topic. Get a concept. Explain it in your own words. An AI tutor marks it — pointing out exactly what
-            you got wrong or missed — and doesn't let go until your explanation holds up.
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
+            Pick one of the seven starter topics — machine learning, databases, AWS, algorithms, system design, DevOps,
+            data engineering — or name any subject yourself and the tutor builds the deck. Then get a concept, explain
+            it in your own words, and an AI tutor marks it: pointing out exactly what you got wrong or missed, and not
+            letting go until your explanation holds up.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
@@ -103,22 +106,24 @@ function Index() {
             </Button>
           </div>
 
-          <p className="mt-8 text-sm text-muted-foreground">
-            7 starter topics · Unlimited AI-generated concepts · Strict pass/reject grading
+          <p className="mt-6 text-sm text-muted-foreground">
+            7 starter topics · Or name your own subject · Unlimited AI-generated concepts · Strict pass/reject grading
           </p>
         </section>
 
         {/* Topic marquee */}
         <section
-          className="flex flex-1 flex-col items-stretch justify-center border-y border-border bg-card/50 py-16"
+          className="flex flex-1 flex-col items-stretch justify-center border-y border-border bg-card/50 py-12"
           aria-label="Topics"
         >
-          <div className="mx-auto mb-8 w-full max-w-5xl px-6">
+          <div className="mx-auto mb-6 w-full max-w-5xl px-6">
             <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
               Start from a topic<span className="text-primary">.</span>
             </h2>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
               Every topic ships with a starter deck. Work through it, and the tutor keeps generating fresh concepts.
+              Don't see yours in the row? The last card lets you name any subject — a protocol, a framework, a
+              compiler design course from twenty years ago — and the tutor builds the deck around it.
             </p>
           </div>
           <div className="strop-marquee-mask">
@@ -165,7 +170,7 @@ function Index() {
       </main>
 
 
-      <footer className="mt-auto border-t border-border py-8">
+      <footer className="mt-auto border-t border-border py-6">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 text-xs text-muted-foreground">
           <span>Strop.</span>
           <span>Explain it, or it doesn't count.</span>
