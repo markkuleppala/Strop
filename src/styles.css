@@ -33,6 +33,12 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-strict-fair: var(--strict-fair);
+  --color-strict-fair-foreground: var(--strict-fair-foreground);
+  --color-strict-strict: var(--strict-strict);
+  --color-strict-strict-foreground: var(--strict-strict-foreground);
+  --color-strict-ruthless: var(--strict-ruthless);
+  --color-strict-ruthless-foreground: var(--strict-ruthless-foreground);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -74,6 +80,12 @@
   --popover: oklch(0.99 0.008 85);
   --popover-foreground: oklch(0.22 0.02 60);
   --primary: oklch(0.55 0.08 130);
+  --strict-fair: oklch(0.82 0.06 130);
+  --strict-fair-foreground: oklch(0.25 0.04 130);
+  --strict-strict: oklch(0.6 0.08 130);
+  --strict-strict-foreground: oklch(0.98 0.01 130);
+  --strict-ruthless: oklch(0.38 0.07 130);
+  --strict-ruthless-foreground: oklch(0.97 0.01 130);
   --primary-foreground: oklch(0.98 0.01 85);
   --secondary: oklch(0.93 0.02 85);
   --secondary-foreground: oklch(0.22 0.02 60);
@@ -111,6 +123,12 @@
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
   --primary: oklch(0.92 0.03 130);
+  --strict-fair: oklch(0.82 0.06 130);
+  --strict-fair-foreground: oklch(0.25 0.04 130);
+  --strict-strict: oklch(0.6 0.08 130);
+  --strict-strict-foreground: oklch(0.98 0.01 130);
+  --strict-ruthless: oklch(0.38 0.07 130);
+  --strict-ruthless-foreground: oklch(0.97 0.01 130);
   --primary-foreground: oklch(0.28 0.03 130);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
