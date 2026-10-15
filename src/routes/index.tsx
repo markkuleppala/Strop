@@ -110,14 +110,14 @@ function Index() {
 
         {/* Topic marquee */}
         <section
-          className="flex flex-1 flex-col justify-center border-y border-border bg-card/50 py-16"
+          className="flex flex-1 flex-col items-stretch justify-center border-y border-border bg-card/50 py-16"
           aria-label="Topics"
         >
-          <div className="mx-auto mb-8 max-w-5xl px-6">
+          <div className="mx-auto mb-8 w-full max-w-5xl px-6">
             <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
               Start from a topic<span className="text-primary">.</span>
             </h2>
-            <p className="mt-3 max-w-xl text-base text-muted-foreground">
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
               Every topic ships with a starter deck. Work through it, and the tutor keeps generating fresh concepts.
             </p>
           </div>
