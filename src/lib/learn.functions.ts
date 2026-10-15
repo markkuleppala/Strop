@@ -206,3 +206,19 @@ export const topicHistory = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return rows ?? [];
   });
+
+export const getProgress = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+    const [c, a, t] = await Promise.all([
+      supabase.from("concepts").select("id,topic,name,status,attempts"),
+      supabase.from("attempts").select("concept_id,passed,created_at").order("created_at", { ascending: false }).limit(2000),
+      supabase.from("topics").select("name").order("created_at"),
+    ]);
+    const err = c.error ?? a.error ?? t.error;
+    if (err) throw new Error(err.message);
+    const { summarize } = await import("./progress");
+    const counts = Object.fromEntries(Object.entries(STARTER_TOPICS).map(([k, v]) => [k, v.length]));
+    return summarize(c.data ?? [], a.data ?? [], counts, [...STARTER_TOPIC_NAMES, ...(t.data ?? []).map((x) => x.name)]);
+  });
