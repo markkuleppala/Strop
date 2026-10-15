@@ -7,6 +7,8 @@ import { ArrowLeft, Check, RotateCcw, X } from "lucide-react";
 import { gradeExplanation, nextConcept, topicHistory } from "@/lib/learn.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { StrictnessPicker } from "@/components/StrictnessPicker";
+
 
 export const Route = createFileRoute("/_authenticated/learn/$topic")({
   head: ({ params }) => ({

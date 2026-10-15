@@ -7,6 +7,8 @@ import { X } from "lucide-react";
 import { addTopic, deleteTopic, listTopics } from "@/lib/learn.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { StrictnessPicker } from "@/components/StrictnessPicker";
+
 
 export const Route = createFileRoute("/_authenticated/topics")({
   head: () => ({
