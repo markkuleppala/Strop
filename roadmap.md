@@ -17,3 +17,4 @@
 
 - [x] Progress dashboard at /progress with header link
 - [x] Forgot password flow (link on /auth + /reset-password page)
+- [x] Lesson: spinner while grading; show submitted answer with rejection feedback
