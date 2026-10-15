@@ -2,14 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getProgress } from "@/lib/learn.functions";
+import { StrictnessDots, strictnessLabel } from "@/components/StrictnessDots";
+import type { PassedConcept } from "@/lib/progress";
+import type { Strictness } from "@/lib/strictness";
 
 export const Route = createFileRoute("/_authenticated/progress")({
   head: () => ({
     meta: [
       { title: "Progress — Strop" },
-      { name: "description", content: "See which concepts you've mastered and where you still struggle." },
+      { name: "description", content: "See which concepts you've mastered, at what grading, and where you still struggle." },
       { property: "og:title", content: "Progress — Strop" },
-      { property: "og:description", content: "See which concepts you've mastered and where you still struggle." },
+      { property: "og:description", content: "See which concepts you've mastered, at what grading, and where you still struggle." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -19,6 +22,16 @@ export const Route = createFileRoute("/_authenticated/progress")({
 
 const pct = (n: number | null) => (n === null ? "—" : `${Math.round(n * 100)}%`);
 
+function groupByTopic(passed: PassedConcept[]) {
+  const out: [string, PassedConcept[]][] = [];
+  for (const p of passed) {
+    const row = out.find(([t]) => t === p.topic);
+    if (row) row[1].push(p);
+    else out.push([p.topic, [p]]);
+  }
+  return out;
+}
+
 function ProgressPage() {
   const fetchProgress = useServerFn(getProgress);
   const { data, isLoading, error } = useQuery({ queryKey: ["progress"], queryFn: () => fetchProgress() });
@@ -26,7 +39,7 @@ function ProgressPage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <h1 className="text-4xl font-semibold tracking-tight">Your progress</h1>
-      <p className="mt-2 text-muted-foreground">What you own, and where you still slip.</p>
+      <p className="mt-2 text-muted-foreground">What you own, at what grading, and where you still slip.</p>
 
       {error && <p className="mt-8 text-destructive">{(error as Error).message}</p>}
       {isLoading && <p className="mt-8 text-muted-foreground">Loading…</p>}
@@ -42,6 +55,24 @@ function ProgressPage() {
             />
             <Stat label="Day streak" value={String(data.streakDays)} />
           </div>
+
+          <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <span>Passed at:</span>
+            {(["fair", "strict", "ruthless"] as Strictness[]).map((level) => (
+              <span key={level} className="inline-flex items-center gap-2">
+                <StrictnessDots level={level} />
+                {strictnessLabel(level)}
+                <span className="font-medium text-foreground">{data.passedByLevel[level]}</span>
+              </span>
+            ))}
+            {data.passedByLevel.unknown > 0 && (
+              <span className="inline-flex items-center gap-2">
+                <StrictnessDots level={null} />
+                Not recorded
+                <span className="font-medium text-foreground">{data.passedByLevel.unknown}</span>
+              </span>
+            )}
+          </p>
 
           <section className="mt-12">
             <h2 className="font-display text-2xl">By topic</h2>
@@ -69,6 +100,41 @@ function ProgressPage() {
                 );
               })}
             </div>
+          </section>
+
+          <section className="mt-12">
+            <h2 className="font-display text-2xl">Passed, and how hard you were marked</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              One dot is Fair, two Strict, three Ruthless — the grading a pass was earned under.
+            </p>
+            {data.passed.length === 0 ? (
+              <p className="mt-4 text-sm text-muted-foreground">
+                Nothing passed yet. <Link to="/topics" className="text-primary underline">Pick a topic</Link>.
+              </p>
+            ) : (
+              <div className="mt-4 space-y-6">
+                {groupByTopic(data.passed).map(([topic, items]) => (
+                  <div key={topic}>
+                    <h3 className="text-sm font-medium">
+                      {topic} <span className="text-muted-foreground">· {items.length} passed</span>
+                    </h3>
+                    <ul className="mt-2 divide-y divide-border rounded-md border border-border bg-card">
+                      {items.map((p) => (
+                        <li key={topic + p.name} className="flex items-center justify-between gap-4 p-3 text-sm">
+                          <span>{p.name}</span>
+                          <span className="flex items-center gap-2">
+                            <span className="text-xs text-muted-foreground">
+                              {p.level ? strictnessLabel(p.level) : "not recorded"}
+                            </span>
+                            <StrictnessDots level={p.level} />
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           <div className="mt-12 grid gap-8 md:grid-cols-2">

@@ -2,6 +2,7 @@ import { Link, useNavigate, useRouter, useRouterState } from "@tanstack/react-ro
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/hooks/use-session";
 
 export function Logo() {
   return (
@@ -17,6 +18,8 @@ export function AppHeader() {
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onTopics = pathname === "/topics" || pathname.startsWith("/topics/");
+  const { session } = useSession();
+  const email = session?.user.email;
   const signOut = async () => {
     await queryClient.cancelQueries();
     queryClient.clear();
@@ -39,6 +42,7 @@ export function AppHeader() {
               <Link to="/progress">Progress</Link>
             </Button>
           )}
+          {email && <span className="text-sm text-muted-foreground">{email}</span>}
           <Button variant="outline" size="sm" onClick={signOut}>
             Sign out
           </Button>

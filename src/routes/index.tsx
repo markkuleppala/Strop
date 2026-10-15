@@ -56,9 +56,7 @@ function AccountCluster() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="hidden max-w-[16ch] truncate text-sm text-muted-foreground md:inline" title={email}>
-        {email}
-      </span>
+      <span className="text-sm text-muted-foreground">{email}</span>
       <Button asChild size="sm" variant="outline">
         <Link to="/topics">Continue learning</Link>
       </Button>

@@ -9,6 +9,7 @@ import { gradeExplanation, nextConcept, topicHistory } from "@/lib/learn.functio
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StrictnessPicker } from "@/components/StrictnessPicker";
+import { reviewAnswer, type AnswerIssue } from "@/lib/answer-review";
 
 
 export const Route = createFileRoute("/_authenticated/learn/$topic")({
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/learn/$topic")({
 
 type Previous = { explanation: string; feedback: string };
 type Concept = { id: string; name: string; retry: boolean; previous: Previous | null };
-type Grade = { passed: boolean; feedback: string; model_answer: string; strictness: string };
+type Grade = { passed: boolean; feedback: string; model_answer: string; strictness: string; issues: AnswerIssue[] };
 const levelLabel = (id: string) => STRICTNESS_LEVELS.find((l) => l.id === id)?.label ?? id;
 
 function LearnPage() {
@@ -178,7 +179,10 @@ function LearnPage() {
                 {!result.passed && (
                   <div>
                     <h2 className="text-lg font-semibold">Your answer</h2>
-                    <p className="mt-1 whitespace-pre-wrap rounded-md border border-border bg-background p-3 text-sm">{text}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Underlined sentences are the ones the tutor flagged — the rest read as correct.
+                    </p>
+                    <AnswerReview text={text} issues={result.issues ?? []} />
                   </div>
                 )}
                 <div>
@@ -231,5 +235,34 @@ function LearnPage() {
         </section>
       )}
     </main>
+  );
+}
+
+function AnswerReview({ text, issues }: { text: string; issues: AnswerIssue[] }) {
+  const { segments, notes } = reviewAnswer(text, issues);
+  return (
+    <div className="mt-2 rounded-md border border-border bg-background p-4">
+      <p className="whitespace-pre-wrap text-sm">
+        {segments.map((s, i) =>
+          s.problems.length ? (
+            <span key={i} className="underline decoration-destructive decoration-wavy decoration-2 underline-offset-4">
+              {s.text}
+            </span>
+          ) : (
+            <span key={i}>{s.text}</span>
+          ),
+        )}
+      </p>
+      {notes.length > 0 && (
+        <ul className="mt-4 space-y-2 border-t border-border pt-3 text-xs">
+          {notes.map((n, i) => (
+            <li key={i}>
+              {n.quote && <span className="block text-muted-foreground">"{n.quote}"</span>}
+              <span className="text-destructive">{n.problem}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
