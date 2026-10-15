@@ -8,4 +8,4 @@
 - [x] Verify signed-out and signed-in headers plus the shorter page in the preview
 - [x] /topics: "Bring your own topic" becomes a white topic card that opens into an inline add form
 - [x] Verify in the preview: card opens, adding a topic works, the new card appears
-- [ ] Header: hide the "Topics" button while on /topics
+- [x] Header: hide the "Topics" button while on /topics
