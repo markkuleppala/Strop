@@ -170,7 +170,7 @@ function Index() {
       </main>
 
 
-      <footer className="mt-auto border-t border-border py-8">
+      <footer className="mt-auto border-t border-border py-6">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 text-xs text-muted-foreground">
           <span>Strop.</span>
           <span>Explain it, or it doesn't count.</span>
