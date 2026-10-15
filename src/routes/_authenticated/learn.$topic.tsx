@@ -153,7 +153,7 @@ function LearnPage() {
                   disabled={loading === "grade"}
                 />
                 <div className="mt-4 flex justify-between gap-2">
-                  <Button variant="ghost" onClick={loadNext} disabled={!!loading}>Skip</Button>
+                  <Button variant="ghost" onClick={() => loadNext(concept?.id)} disabled={!!loading}>Skip</Button>
                   <Button onClick={submit} disabled={!!loading || text.trim().length < 10}>
                     {loading === "grade" ? (
                       <>
@@ -199,7 +199,7 @@ function LearnPage() {
                         <ReactMarkdown>{result.model_answer}</ReactMarkdown>
                       </div>
                     </div>
-                    <Button onClick={loadNext}>Next concept</Button>
+                    <Button onClick={() => loadNext()}>Next concept</Button>
                   </>
                 ) : (
                   <div className="flex justify-between gap-2">
@@ -214,7 +214,7 @@ function LearnPage() {
         {err && (
           <div className="mt-4 text-sm text-destructive">
             {err}{" "}
-            {!concept && <button className="underline" onClick={loadNext}>Try again</button>}
+            {!concept && <button className="underline" onClick={() => loadNext()}>Try again</button>}
           </div>
         )}
       </section>
