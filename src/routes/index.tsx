@@ -94,7 +94,7 @@ function Index() {
           </h1>
           <p className="mt-4 font-display text-sm italic text-muted-foreground">— Albert Einstein</p>
 
-          <p className="mt-8 max-w-2xl text-lg text-muted-foreground">
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
             Pick one of the seven starter topics — machine learning, databases, AWS, algorithms, system design, DevOps,
             data engineering — or name any subject yourself and the tutor builds the deck. Then get a concept, explain
             it in your own words, and an AI tutor marks it: pointing out exactly what you got wrong or missed, and not
@@ -106,17 +106,17 @@ function Index() {
             </Button>
           </div>
 
-          <p className="mt-8 text-sm text-muted-foreground">
+          <p className="mt-6 text-sm text-muted-foreground">
             7 starter topics · Or name your own subject · Unlimited AI-generated concepts · Strict pass/reject grading
           </p>
         </section>
 
         {/* Topic marquee */}
         <section
-          className="flex flex-1 flex-col items-stretch justify-center border-y border-border bg-card/50 py-16"
+          className="flex flex-1 flex-col items-stretch justify-center border-y border-border bg-card/50 py-12"
           aria-label="Topics"
         >
-          <div className="mx-auto mb-8 w-full max-w-5xl px-6">
+          <div className="mx-auto mb-6 w-full max-w-5xl px-6">
             <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
               Start from a topic<span className="text-primary">.</span>
             </h2>
