@@ -79,15 +79,15 @@ function Index() {
   const marqueeCards = [...cards, ...cards];
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="flex min-h-screen flex-col overflow-x-hidden">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Logo />
         <AccountCluster />
       </header>
 
-      <main>
+      <main className="flex flex-1 flex-col">
         {/* Hero */}
-        <section className="mx-auto max-w-5xl px-6 pb-12 pt-8 md:pt-12">
+        <section className="mx-auto max-w-5xl px-6 pb-16 pt-14 md:pb-20 md:pt-20">
           <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
             "If you can't explain it <em className="text-primary">simply</em>, you don't understand it well enough."
           </h1>
@@ -109,8 +109,11 @@ function Index() {
         </section>
 
         {/* Topic marquee */}
-        <section className="border-y border-border bg-card/50 py-10" aria-label="Topics">
-          <div className="mx-auto mb-6 max-w-5xl px-6">
+        <section
+          className="flex flex-1 flex-col justify-center border-y border-border bg-card/50 py-14"
+          aria-label="Topics"
+        >
+          <div className="mx-auto mb-8 max-w-5xl px-6">
             <h2 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
               Start from a topic<span className="text-primary">.</span>
             </h2>
@@ -162,7 +165,7 @@ function Index() {
       </main>
 
 
-      <footer className="border-t border-border py-6">
+      <footer className="mt-auto border-t border-border py-8">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 text-xs text-muted-foreground">
           <span>Strop.</span>
           <span>Explain it, or it doesn't count.</span>
