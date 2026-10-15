@@ -97,7 +97,20 @@ export const nextConcept = createServerFn({ method: "POST" })
     });
 
     if (choice.kind === "retry" || choice.kind === "pending") {
-      return { id: choice.concept.id, name: choice.concept.name, retry: choice.kind === "retry" };
+      const { data: last } = await supabase
+        .from("attempts")
+        .select("explanation,feedback")
+        .eq("concept_id", choice.concept.id)
+        .eq("passed", false)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return {
+        id: choice.concept.id,
+        name: choice.concept.name,
+        retry: choice.kind === "retry",
+        previous: last ? { explanation: last.explanation, feedback: last.feedback } : null,
+      };
     }
 
     let name: string;
@@ -123,7 +136,7 @@ export const nextConcept = createServerFn({ method: "POST" })
       .select("id,name")
       .single();
     if (insErr) throw new Error(insErr.message);
-    return { id: inserted.id, name: inserted.name, retry: false };
+    return { id: inserted.id, name: inserted.name, retry: false, previous: null };
   });
 
 export const gradeExplanation = createServerFn({ method: "POST" })
