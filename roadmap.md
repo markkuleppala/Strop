@@ -15,3 +15,4 @@
 
 
 
+- [x] Progress dashboard at /progress with header link

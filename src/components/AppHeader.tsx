@@ -34,6 +34,11 @@ export function AppHeader() {
               <Link to="/topics">Topics</Link>
             </Button>
           )}
+          {pathname !== "/progress" && (
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/progress">Progress</Link>
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={signOut}>
             Sign out
           </Button>
