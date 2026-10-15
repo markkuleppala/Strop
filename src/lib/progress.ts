@@ -1,5 +1,12 @@
+import { isStrictness, type Strictness } from "./strictness";
+
 export type ConceptStat = { id: string; topic: string; name: string; status: string; attempts: number };
-export type AttemptStat = { concept_id: string; passed: boolean; created_at: string };
+export type AttemptStat = {
+  concept_id: string;
+  passed: boolean;
+  created_at: string;
+  strictness: string | null;
+};
 
 export type TopicProgress = {
   topic: string;
@@ -8,6 +15,10 @@ export type TopicProgress = {
   pool: number;
   firstTryRate: number | null;
 };
+
+export type PassedConcept = { topic: string; name: string; level: Strictness | null; at: string };
+
+export type PassedLevels = { fair: number; strict: number; ruthless: number; unknown: number };
 
 export type ProgressSummary = {
   mastered: number;
@@ -19,6 +30,8 @@ export type ProgressSummary = {
   topics: TopicProgress[];
   struggling: { topic: string; name: string; attempts: number }[];
   recent: { topic: string; name: string; passed: boolean; at: string }[];
+  passed: PassedConcept[];
+  passedByLevel: PassedLevels;
 };
 
 const day = (iso: string) => iso.slice(0, 10);
@@ -34,6 +47,15 @@ export function streak(dates: string[], today: Date): number {
     cur.setUTCDate(cur.getUTCDate() - 1);
   }
   return n;
+}
+
+/** The grading level in force when a concept was finally passed (null = recorded before levels existed). */
+export function passLevelOf(attempts: AttemptStat[], conceptId: string): Strictness | null {
+  const passes = attempts
+    .filter((a) => a.concept_id === conceptId && a.passed)
+    .sort((x, y) => x.created_at.localeCompare(y.created_at));
+  const last = passes[passes.length - 1];
+  return last && isStrictness(last.strictness) ? last.strictness : null;
 }
 
 export function summarize(
@@ -57,6 +79,15 @@ export function summarize(
   };
   const revs = passedC.map((c) => byConcept.get(c.id)?.length ?? c.attempts).filter((n) => n > 0);
   const conceptById = new Map(concepts.map((c) => [c.id, c]));
+
+  const passed: PassedConcept[] = passedC
+    .map((c) => ({
+      topic: c.topic,
+      name: c.name,
+      level: passLevelOf(attempts, c.id),
+      at: byConcept.get(c.id)?.at(-1)?.created_at ?? "",
+    }))
+    .sort((a, b) => a.topic.localeCompare(b.topic) || a.name.localeCompare(b.name));
 
   return {
     mastered: passedC.length,
@@ -88,5 +119,12 @@ export function summarize(
         const c = conceptById.get(a.concept_id);
         return c ? [{ topic: c.topic, name: c.name, passed: a.passed, at: a.created_at }] : [];
       }),
+    passed,
+    passedByLevel: {
+      fair: passed.filter((p) => p.level === "fair").length,
+      strict: passed.filter((p) => p.level === "strict").length,
+      ruthless: passed.filter((p) => p.level === "ruthless").length,
+      unknown: passed.filter((p) => p.level === null).length,
+    },
   };
 }
