@@ -88,7 +88,7 @@ function Index() {
 
       <main className="flex flex-1 flex-col">
         {/* Hero */}
-        <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-14 md:py-16">
+        <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-12 md:py-14">
           <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
             "If you can't explain it <em className="text-primary">simply</em>, you don't understand it well enough."
           </h1>
