@@ -24,3 +24,4 @@
 - [x] Strictness picker: Fair light, Strict medium, Ruthless dark salvia
 - [x] Header: show the account email untruncated on the front page and on /topics
 - [ ] Progress: record which grader strictness each attempt used; show per topic which concepts you passed and at what grading, as 1-3 dots
+- [ ] Lesson review: underline the incorrect lines of the submitted answer and show what is wrong with each
