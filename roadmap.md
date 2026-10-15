@@ -20,3 +20,4 @@
 - [x] Lesson: spinner while grading; show submitted answer with rejection feedback
 - [x] Lesson: show grading difficulty used with the result
 - [x] Lesson: 'Show feedback' button while revising
+- [x] Lesson: returning to a tried concept shows the latest rejected answer
