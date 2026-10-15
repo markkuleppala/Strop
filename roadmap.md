@@ -21,3 +21,4 @@
 - [x] Lesson: show grading difficulty used with the result
 - [x] Lesson: 'Show feedback' button while revising
 - [x] Lesson: returning to a tried concept shows the latest rejected answer
+- [x] Strictness picker: Fair light, Strict medium, Ruthless dark salvia
