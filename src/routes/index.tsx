@@ -95,10 +95,9 @@ function Index() {
           <p className="mt-4 font-display text-sm italic text-muted-foreground">— Albert Einstein</p>
 
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-            Pick one of the seven starter topics — machine learning, databases, AWS, algorithms, system design, DevOps,
-            data engineering — or name any subject yourself and the tutor builds the deck. Then get a concept, explain
-            it in your own words, and an AI tutor marks it: pointing out exactly what you got wrong or missed, and not
-            letting go until your explanation holds up.
+            Pick one of the seven starter topics, or name any subject yourself and the tutor builds the deck. Then get
+            a concept, explain it in your own words, and an AI tutor marks it: pointing out exactly what you got wrong
+            or missed, and not letting go until your explanation holds up.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
