@@ -43,9 +43,11 @@ function TopicsPage() {
   };
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
+    <main className="mx-auto max-w-5xl px-6 py-12">
       <h1 className="text-4xl font-semibold tracking-tight">Pick a topic</h1>
       <p className="mt-2 text-muted-foreground">You'll get one concept at a time to explain.</p>
+      <StrictnessPicker className="mt-6" />
+
 
       {error && <p className="mt-8 text-destructive">{(error as Error).message}</p>}
       {isLoading && <p className="mt-8 text-muted-foreground">Loading…</p>}
