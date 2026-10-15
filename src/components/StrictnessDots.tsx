@@ -1,4 +1,4 @@
-import { STRICTNESS_LEVELS, type Strictness } from "./strictness";
+import { STRICTNESS_LEVELS, type Strictness } from "@/lib/strictness";
 
 /** How many dots represent one grading level: Fair 1, Strict 2, Ruthless 3. */
 export const STRICTNESS_DOTS: Record<Strictness, number> = { fair: 1, strict: 2, ruthless: 3 };
