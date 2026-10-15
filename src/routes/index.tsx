@@ -88,36 +88,36 @@ function Index() {
       <main className="flex flex-1 flex-col">
         {/* Hero */}
         <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-14 md:py-16">
-          <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+          <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
             "If you can't explain it <em className="text-primary">simply</em>, you don't understand it well enough."
           </h1>
           <p className="mt-4 font-display text-sm italic text-muted-foreground">— Albert Einstein</p>
 
-          <p className="mt-5 max-w-xl text-base text-muted-foreground">
+          <p className="mt-8 max-w-2xl text-lg text-muted-foreground">
             Pick a topic. Get a concept. Explain it in your own words. An AI tutor marks it — pointing out exactly what
             you got wrong or missed — and doesn't let go until your explanation holds up.
           </p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="mt-10 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
               <Link to="/topics">Start learning</Link>
             </Button>
           </div>
 
-          <p className="mt-5 text-xs text-muted-foreground">
+          <p className="mt-8 text-sm text-muted-foreground">
             7 starter topics · Unlimited AI-generated concepts · Strict pass/reject grading
           </p>
         </section>
 
         {/* Topic marquee */}
         <section
-          className="flex flex-1 flex-col justify-center border-y border-border bg-card/50 py-14"
+          className="flex flex-1 flex-col justify-center border-y border-border bg-card/50 py-16"
           aria-label="Topics"
         >
           <div className="mx-auto mb-8 max-w-5xl px-6">
-            <h2 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
               Start from a topic<span className="text-primary">.</span>
             </h2>
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+            <p className="mt-3 max-w-xl text-base text-muted-foreground">
               Every topic ships with a starter deck. Work through it, and the tutor keeps generating fresh concepts.
             </p>
           </div>
@@ -130,10 +130,10 @@ function Index() {
                     key={`${c.name}-${i}`}
                     aria-hidden={i >= cards.length}
                     tabIndex={i >= cards.length ? -1 : 0}
-                    className="group mr-4 flex w-64 shrink-0 flex-col rounded-md border border-border bg-background p-5 transition-colors hover:bg-accent"
+                    className="group mr-4 flex min-h-[200px] w-64 shrink-0 flex-col rounded-md border border-border bg-background p-6 transition-colors hover:bg-accent"
                   >
                     <span className="font-display text-xs text-muted-foreground">08</span>
-                    <p className="mt-1 font-display text-xl text-primary">
+                    <p className="mt-1 font-display text-2xl text-primary">
                       Bring your own topic
                       <span aria-hidden className="ml-1 inline-block transition-transform group-hover:translate-x-1">
                         →
@@ -149,12 +149,12 @@ function Index() {
                     key={`${c.name}-${i}`}
                     aria-hidden={i >= cards.length}
                     tabIndex={i >= cards.length ? -1 : 0}
-                    className="mr-4 flex w-64 shrink-0 flex-col rounded-md border border-border bg-background p-5 transition-colors hover:bg-accent"
+                    className="mr-4 flex min-h-[200px] w-64 shrink-0 flex-col rounded-md border border-border bg-background p-6 transition-colors hover:bg-accent"
                   >
                     <span className="font-display text-xs text-muted-foreground">
                       {String(cards.indexOf(c) + 1).padStart(2, "0")}
                     </span>
-                    <p className="mt-1 font-display text-xl">{c.name}</p>
+                    <p className="mt-1 font-display text-2xl">{c.name}</p>
                     <p className="mt-auto pt-2 text-xs text-muted-foreground">{c.count} starter concepts</p>
                   </Link>
                 )
