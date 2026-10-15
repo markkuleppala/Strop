@@ -79,7 +79,7 @@ function Index() {
   const marqueeCards = [...cards, ...cards];
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden">
+    <div className="flex min-h-screen flex-col items-stretch overflow-x-hidden">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Logo />
         <AccountCluster />
