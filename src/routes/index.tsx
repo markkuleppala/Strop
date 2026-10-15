@@ -87,7 +87,7 @@ function Index() {
 
       <main className="flex flex-1 flex-col">
         {/* Hero */}
-        <section className="mx-auto max-w-5xl px-6 pb-16 pt-14 md:pb-20 md:pt-20">
+        <section className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-14 md:py-16">
           <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
             "If you can't explain it <em className="text-primary">simply</em>, you don't understand it well enough."
           </h1>
@@ -109,10 +109,7 @@ function Index() {
         </section>
 
         {/* Topic marquee */}
-        <section
-          className="flex flex-1 flex-col justify-center border-y border-border bg-card/50 py-14"
-          aria-label="Topics"
-        >
+        <section className="border-y border-border bg-card/50 py-14" aria-label="Topics">
           <div className="mx-auto mb-8 max-w-5xl px-6">
             <h2 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
               Start from a topic<span className="text-primary">.</span>
