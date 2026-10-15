@@ -16,3 +16,4 @@
 
 
 - [x] Progress dashboard at /progress with header link
+- [ ] Forgot password flow (link on /auth + /reset-password page)
