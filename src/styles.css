@@ -159,6 +159,12 @@
 }
 
 @layer base {
+  /* Reserve the scrollbar gutter on every page so short pages (/topics)
+     and long pages (/progress) keep the same content width — no jump. */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   * {
     border-color: var(--color-border);
   }
