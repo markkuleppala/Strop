@@ -190,7 +190,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       })
       .eq("id", concept.id);
     if (uErr) throw new Error(uErr.message);
-    return { passed, feedback, model_answer };
+    return { passed, feedback, model_answer, strictness: level };
   });
 
 export const topicHistory = createServerFn({ method: "POST" })
