@@ -22,3 +22,5 @@
 - [x] Lesson: 'Show feedback' button while revising
 - [x] Lesson: returning to a tried concept shows the latest rejected answer
 - [x] Strictness picker: Fair light, Strict medium, Ruthless dark salvia
+- [x] Header: show the account email untruncated on the front page and on /topics
+- [ ] Progress: record which grader strictness each attempt used; show per topic which concepts you passed and at what grading, as 1-3 dots
